@@ -21,3 +21,13 @@ $factory->define(App\User::class, function (Faker\Generator $faker) {
         'remember_token' => str_random(10),
     ];
 });
+
+$factory->define(App\Event::class, function (Faker\Generator $faker) {
+    return [
+        'title' => $faker->company . "'s Event",
+        'description' => $faker->paragraphs(3, true),
+        'location' => $faker->city . ', ' . $faker->country,
+        'is_highlighted' => $faker->boolean(40),
+        'image_url' => 'http://samueldking.co.uk/images/1288481786_1.jpg'
+    ];
+});
