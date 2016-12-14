@@ -14,7 +14,7 @@
     </nav>
 @endsection
 @section('content')
-    <h2>{{ $event_date->event->title }}</h2>
+    <h2>{{ $event_date->event->title }} <small>{{ $event_date->location }}</small></h2>
     <form action="/events/{{$event_date->id}}" method="post">
         {{ csrf_field() }}
         <div class="row">
