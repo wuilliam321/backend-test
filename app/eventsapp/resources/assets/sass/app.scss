@@ -7,3 +7,14 @@
 
 // Bootstrap
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+
+.vcenter {
+  padding-top: 15px;
+}
+
+.float-button {
+  position: fixed;
+  bottom:10px;
+  right:10px;
+  z-index: 9000;
+}

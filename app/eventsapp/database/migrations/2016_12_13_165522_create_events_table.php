@@ -17,7 +17,6 @@ class CreateEventsTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->text('description');
-            $table->string('location');
             $table->boolean('is_highlighted');
             $table->string('image_url');
             $table->timestamps();

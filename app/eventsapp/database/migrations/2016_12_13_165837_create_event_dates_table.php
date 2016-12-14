@@ -15,6 +15,9 @@ class CreateEventDatesTable extends Migration
     {
         Schema::create('event_dates', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('location');
+            $table->double('price');
+            $table->dateTime('date');
             $table->integer('event_id')->unsigned();
             $table->foreign('event_id')->references('id')->on('events')->onDelete('cascade');
             $table->timestamps();
