@@ -13,7 +13,9 @@
 
 Route::get('/', 'EventsController@index')->name('main');
 Route::get('/events', 'EventsController@index')->name('main');
-Route::get('/events/create', 'EventsController@create')->name('add');
-Route::post('/events/create', 'EventsController@save')->name('create');
+Route::get('/events/create', 'EventsController@create')->name('add')->middleware('auth');
+Route::post('/events/create', 'EventsController@save')->name('create')->middleware('auth');
 Route::get('/events/{id}', 'EventsController@view')->name('view');
-Route::post('/events/{id}', 'EventsController@update')->name('update');
+Route::get('/events/{id}/edit', 'EventsController@edit')->name('edit')->middleware('auth');
+Route::post('/events/{id}', 'EventsController@update')->name('update')->middleware('auth');
+Auth::routes();

@@ -1,9 +1,9 @@
-@extends('layouts.main')
+@extends('layouts.app')
 @section('title', 'Dashboard')
 @section('content')
 
     <div class="row">
-        <div class="col-xs-12 col-md-8">
+        <div class="col-xs-12 col-md-7">
             @foreach ($event_dates as $event_date)
                 <div class="col-xs-12 col-md-5 col-md-offset-1 panel panel-default">
                     <div class="row panel-heading">
@@ -34,7 +34,12 @@
                     </div>
                     <div class="row panel-footer">
                         <div class="event-footer">
-                            <a href="/events/{{ $event_date->id }}">View</a>
+                            @if (Auth::guest())
+                                <a href="/events/{{ $event_date->id }}">View</a>
+                            @else
+                                <a href="/events/{{ $event_date->id }}">View</a> |
+                                <a href="/events/{{ $event_date->id }}/edit">Edit</a>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -43,7 +48,7 @@
                 {{ $event_dates->links() }}
             </div>
         </div>
-        <div class="col-xs-12 col-md-4">
+        <div class="col-xs-12 col-md-offset-1 col-md-3">
             <h3>Today's Highlight</h3>
             @foreach ($highlighted as $event_date)
                 <div class="row panel panel-default">
@@ -60,21 +65,17 @@
                     </div>
                 </div>
             @endforeach
-            @if (Route::has('login'))
-                <div class="top-right links">
-                    <a href="{{ url('/login') }}">Login</a>
-                    <a href="{{ url('/register') }}">Register</a>
-                </div>
-            @endif
         </div>
     </div>
-    <div class="float-button">
-        <a href="/events/create" class="btn btn-primary text-center">
-            &nbsp;<span class="glyphicon glyphicon-plus"></span>
-            <span class="hidden-xs">
-                <br>
-                Add Event
-            </span>
-        </a>
-    </div>
+    @if (!Auth::guest())
+        <div class="float-button">
+            <a href="/events/create" class="btn btn-primary text-center">
+                &nbsp;<span class="glyphicon glyphicon-plus"></span>
+                <span class="hidden-xs">
+                    <br>
+                    Add Event
+                </span>
+            </a>
+        </div>
+    @endif
 @endsection
