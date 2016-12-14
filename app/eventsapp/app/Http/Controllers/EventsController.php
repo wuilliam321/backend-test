@@ -48,6 +48,14 @@ class EventsController extends Controller
     function save(Request $request)
     {
         if (Auth::check()) {
+            $this->validate($request, [
+                'title' => 'required|max:255',
+                'description' => 'required',
+                'image_url' => 'required',
+                'event_date.date' => 'required',
+                'event_date.price' => 'required',
+                'event_date.location' => 'required',
+            ]);
             $data = $request->all();
 
             $event = new Event();
