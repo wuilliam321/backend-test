@@ -40,7 +40,7 @@ class EventsController extends Controller
         $event->title = $data['title'];
         $event->description = $data['description'];
         $event->image_url = $data['image_url'];
-        $event->is_highlighted = $data['is_highlighted'];
+        $event->is_highlighted = (isset($data['is_highlighted'])) ? $data['is_highlighted'] : false;
         $event->save();
 
         $event_date = new EventDate();
@@ -51,6 +51,9 @@ class EventsController extends Controller
         $event->event_dates()->saveMany([
             $event_date
         ]);
+
+        $request->session()->flash('status', 'success');
+        $request->session()->flash('message', 'Event has been created');
 
         return redirect()->route('main');
     }
@@ -71,6 +74,9 @@ class EventsController extends Controller
         $event->image_url = $data['image_url'];
         $event->is_highlighted = (isset($data['is_highlighted'])) ? $data['is_highlighted'] : false;
         $event_date->event->save();
+
+        $request->session()->flash('status', 'success');
+        $request->session()->flash('message', 'Event has been updated');
 
         return redirect()->route('main');
     }

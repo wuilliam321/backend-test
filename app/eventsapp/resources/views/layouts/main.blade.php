@@ -20,6 +20,11 @@
             </nav>
         @show
         <div class="container-fluid">
+            @if(Session::has('status'))
+                <div class="alert alert-{{ Session::get('status') }}" role="alert">
+                    {{ Session::get('message') }}
+                </div>
+            @endif
             @yield('content')
         </div>
     </div>

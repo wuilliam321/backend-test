@@ -13,8 +13,18 @@
                                 <i class="fa fa-share-alt" aria-hidden="true"></i> Share
                                 <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                                <li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i> Twitter</a></li>
+                            <ul class="dropdown-menu sharer" aria-labelledby="dropdownMenu1">
+                                <li>
+                                    <div class="twitter">
+                                        <a class="twitter-share-button"
+                                           href="https://twitter.com/share"
+                                           data-size="large"
+                                           data-text="I will to go the {{ $event_date->event->title }} @ {{ $event_date->getDateForEventCard() }}"
+                                           data-url="{{ Request::fullUrl()  }}">
+                                            Tweet
+                                        </a>
+                                    </div>
+                                </li>
                             </ul>
                         </div>
                     </div>
