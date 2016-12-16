@@ -3,7 +3,7 @@
     <h2>Create Event</h2>
     @if (count($errors) > 0)
         <div class="alert alert-danger">
-            Ups! an error has been ocurred, please check field alerts
+            Ups! an error has been occurred, please check field alerts
         </div>
     @endif
     {!! Form::open(['url' => '/events/create']) !!}

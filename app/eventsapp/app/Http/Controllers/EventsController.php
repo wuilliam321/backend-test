@@ -12,6 +12,10 @@ use Illuminate\Support\Facades\Validator;
 
 class EventsController extends Controller
 {
+    /**
+     * Show the list of events
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     function index()
     {
         $events = EventDate::paginate(4);
@@ -23,30 +27,51 @@ class EventsController extends Controller
         return view('events.list', $data);
     }
 
+    /**
+     * Allows to create a new event
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\View\View
+     */
     function create(Request $request)
     {
         if (Auth::check()) {
             return view('events.create');
         } else {
+            // Messages on success
             $request->session()->flash('status', 'danger');
             $request->session()->flash('message', 'You have not credentials');
             return redirect()->route('login');
         }
     }
 
+    /**
+     * Display a known event by using its id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     function view($id)
     {
         $event_date = EventDate::find($id);
         return view('events.view', ['event_date' => $event_date]);
     }
 
+    /**
+     * Show the form to update the given event's id
+     * @param $id
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
     function edit($id)
     {
         $event_date = EventDate::find($id);
         return view('events.edit', ['event_date' => $event_date]);
     }
 
-
+    /**
+     * Save the event into the database or update an old one
+     * @param Request $request
+     * @param null $id Event id (null when it is a creation action)
+     * @return \Illuminate\Http\RedirectResponse
+     */
     function store(Request $request, $id = null)
     {
         if (Auth::check()) {
@@ -66,36 +91,27 @@ class EventsController extends Controller
                     ->withInput();
             }
 
+            // Getting the request data
+            $data = $request->all();
+
             // Check if it is an update or create
-            if ($request->isMethod('put')) {
-                $event_date = EventDate::find($id);
-                $event = $event_date->event;
+            if ($request->isMethod('put') && isset($id) && !empty($id)) {
+                $response = $this->updateEvent($id, $data);
             } else {
-                $event = new Event();
-                $event_date = new EventDate();
+                $response = $this->createEvent($data);
             }
 
-            // Preparing data
-            $data = $request->all();
-            $event->title = $data['title'];
-            $event->description = $data['description'];
-            $event->image_url = $data['image_url'];
-            $event->is_highlighted = (isset($data['is_highlighted'])) ? $data['is_highlighted'] : false;
-            $event->save();
-
-            $event_date->date = Carbon::createFromFormat('M j @ H:i', $data['date'])->toDateTimeString();
-            $event_date->price = $data['price'];
-            $event_date->location = $data['location'];
-
-            $event->event_dates()->saveMany([
-                $event_date
-            ]);
-
             // Messages on success
-            $request->session()->flash('status', 'success');
-            $request->session()->flash('message', 'Event has been stored');
+            if ($response) {
+                $request->session()->flash('status', 'success');
+                $request->session()->flash('message', 'Event has been stored');
+                return redirect()->route('main');
+            } else {
+                $request->session()->flash('status', 'danger');
+                $request->session()->flash('message', 'Ups! an error has been occurred');
+                return redirect(URL::previous());
+            }
 
-            return redirect()->route('main');
         } else {
             // Messages on error
             $request->session()->flash('status', 'danger');
@@ -103,5 +119,51 @@ class EventsController extends Controller
 
             return redirect()->route('login');
         }
+    }
+
+    public function updateEvent($id, $data)
+    {
+        $event_date = EventDate::find($id);
+        $event = $event_date->event;
+        $this->prepareEventFields($event, $data);
+        $this->prepareEventDateFields($event_date, $data);
+        return $this->storeEvent($event, $event_date, $data);
+    }
+
+    public function createEvent($data)
+    {
+        $event = new Event();
+        $event_date = new EventDate();
+        $this->prepareEventFields($event, $data);
+        $this->prepareEventDateFields($event_date, $data);
+        return $this->storeEvent($event, $event_date);
+    }
+
+    public function storeEvent($event, $event_date)
+    {
+        // Saving the event and related dates
+        $event->save();
+        $event->event_dates()->saveMany([
+            $event_date
+        ]);
+
+        return $event;
+    }
+
+    public function prepareEventFields(&$event, $data)
+    {
+        // Preparing the event info
+        $event->title = $data['title'];
+        $event->description = $data['description'];
+        $event->image_url = $data['image_url'];
+        $event->is_highlighted = (isset($data['is_highlighted'])) ? $data['is_highlighted'] : false;
+    }
+
+    public function prepareEventDateFields(&$event_date, $data)
+    {
+        // Preparing the event data info
+        $event_date->date = Carbon::createFromFormat('M j @ H:i', $data['date'])->toDateTimeString();
+        $event_date->price = $data['price'];
+        $event_date->location = $data['location'];
     }
 }
