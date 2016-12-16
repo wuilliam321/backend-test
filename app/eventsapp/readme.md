@@ -3,7 +3,7 @@
 ## How to install
 
 ### Pre-requisite
- * Install PHP5.6+
+ * Install PHP5.6+ (see https://launchpad.net/~ondrej/+archive/ubuntu/php)
  * Install Laravel (see https://laravel.com/docs/5.3)
  * Install Composer (https://getcomposer.org/download/)
  * Install Node.js (Stable version) (https://github.com/creationix/nvm)
@@ -11,6 +11,10 @@
  * Install a Mysql Server
  
 ### Setting up the app
+Installing some libraries needed
+```
+sudo apt-get install php5.6-mbstring php5.6-xml php5.6-mysql
+```
 Download the code
 ```
 git clone https://github.com/wuilliam321/backend-test.git
@@ -79,5 +83,9 @@ php artisan serve
 Now you can go to:
 ```
 http://localhost:8000/
+```
+Working Demo:
+```
+http://ec2-54-191-170-68.us-west-2.compute.amazonaws.com/
 ```
 And see the app working
