@@ -6,6 +6,7 @@ use App\Event;
 use App\EventDate;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
@@ -79,9 +80,9 @@ class EventsController extends Controller
             $validator = Validator::make($request->all(), [
                 'title' => 'required|max:255',
                 'description' => 'required',
-                'image_url' => 'required',
-                'date' => 'required',
-                'price' => 'required',
+                'image_url' => 'required|url',
+                'date' => 'required|date_format:"M j @ H:i"',
+                'price' => 'required|numeric',
                 'location' => 'required',
             ]);
 
@@ -121,6 +122,12 @@ class EventsController extends Controller
         }
     }
 
+    /**
+     * Update the given event
+     * @param $id Event identifier
+     * @param $data Array of the new data
+     * @return \App\Event
+     */
     public function updateEvent($id, $data)
     {
         $event_date = EventDate::find($id);
@@ -130,6 +137,12 @@ class EventsController extends Controller
         return $this->storeEvent($event, $event_date, $data);
     }
 
+
+    /**
+     * Create an event with the given data
+     * @param $data Array of the new data
+     * @return \App\Event
+     */
     public function createEvent($data)
     {
         $event = new Event();
@@ -139,6 +152,12 @@ class EventsController extends Controller
         return $this->storeEvent($event, $event_date);
     }
 
+    /**
+     * Store the event in database and its related event dates
+     * @param $event \App\Event model
+     * @param $event_date \App\EventDate model
+     * @return \App\Event model of stored event
+     */
     public function storeEvent($event, $event_date)
     {
         // Saving the event and related dates
@@ -150,6 +169,11 @@ class EventsController extends Controller
         return $event;
     }
 
+    /**
+     * Prepare event model with the given data fields
+     * @param $event \App\Event model
+     * @param $data Array of event fields
+     */
     public function prepareEventFields(&$event, $data)
     {
         // Preparing the event info
@@ -159,6 +183,11 @@ class EventsController extends Controller
         $event->is_highlighted = (isset($data['is_highlighted'])) ? $data['is_highlighted'] : false;
     }
 
+    /**
+     * Prepare event date model with the given data fields
+     * @param $event \App\EventDate model
+     * @param $data Array of event fields
+     */
     public function prepareEventDateFields(&$event_date, $data)
     {
         // Preparing the event data info

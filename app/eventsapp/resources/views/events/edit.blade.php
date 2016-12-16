@@ -60,22 +60,27 @@
                         </span>
                     @endif
                 </div>
-                <div class="form-group">
+                <div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
                     {{ Form::label('date', 'Event Date') }}
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
                         {{ Form::text('date', $event_date->getDate() . ' @ ' . $event_date->getTime(), ['placeholder' => 'Click to change date', 'class' => 'form-control']) }}
                     </div>
+                    @if ($errors->has('date'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('date') }}</strong>
+                        </span>
+                    @endif
                 </div>
-                <div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
+                <div class="form-group{{ $errors->has('price') ? ' has-error' : '' }}">
                     {{ Form::label('price', 'Price') }}
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></div>
                         {{ Form::text('price', $event_date->price, ['placeholder' => 'Set the event\'s price', 'class' => 'form-control']) }}
                     </div>
-                    @if ($errors->has('date'))
+                    @if ($errors->has('price'))
                         <span class="help-block">
-                            <strong>{{ $errors->first('date') }}</strong>
+                            <strong>{{ $errors->first('price') }}</strong>
                         </span>
                     @endif
                 </div>
