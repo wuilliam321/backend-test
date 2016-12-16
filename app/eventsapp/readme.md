@@ -4,6 +4,7 @@
 
 ### Pre-requisite
  * Install PHP5.6+
+ * Install Laravel (see https://laravel.com/docs/5.3)
  * Install Composer (https://getcomposer.org/download/)
  * Install Node.js (Stable version) (https://github.com/creationix/nvm)
  * Install Gulp (http://gulpjs.com/)
