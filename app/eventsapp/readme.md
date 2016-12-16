@@ -3,6 +3,7 @@
 ## How to install
 
 ### Pre-requisite
+ * Install PHP5.6+
  * Install Composer (https://getcomposer.org/download/)
  * Install Node.js (Stable version) (https://github.com/creationix/nvm)
  * Install Gulp (http://gulpjs.com/)
