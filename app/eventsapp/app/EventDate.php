@@ -41,4 +41,13 @@ class EventDate extends Model
     {
         return $this->belongsTo('App\Event');
     }
+
+    static function getHighlightedEvents()
+    {
+        return self::join('events', 'events.id', '=', 'event_dates.event_id')
+            ->select('events.*', 'event_dates.*')
+            ->where('date', '>=', Carbon::today())
+            ->where('is_highlighted', 1)
+            ->get();
+    }
 }

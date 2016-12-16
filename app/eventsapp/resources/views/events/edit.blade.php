@@ -1,62 +1,83 @@
 @extends('layouts.app')
-@section('title', 'Dashboard')
 @section('content')
-    <form action="/events/{{$event_date->id}}" method="post">
-        {{ csrf_field() }}
+    <h2>{{ $event_date->event->title }} <small>{{ $event_date->location }}</small></h2>
+    @if (count($errors) > 0)
+        <div class="alert alert-danger">
+            Ups! an error has been ocurred, please check field alerts
+        </div>
+    @endif
+    {!! Form::open(['url' => '/events/' . $event_date->id, 'method' => 'put']) !!}
         <div class="row">
             <div class="col-xs-12 col-md-8">
-                <h2>{{ $event_date->event->title }} <small>{{ $event_date->location }}</small></h2>
-                <div class="form-group">
-                    <label for="title">Title</label>
-                    <input type="text" class="form-control" id="title" name="title" placeholder="Write the amazing event title here..." value="{{ $event_date->event->title }}">
+                <div class="form-group{{ $errors->has('title') ? ' has-error' : '' }}">
+                    {{ Form::label('title') }}
+                    {{ Form::text('title', $event_date->event->title, ['placeholder' => 'Write the amazing event title here...', 'class' => 'form-control']) }}
+                    @if ($errors->has('title'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('title') }}</strong>
+                        </span>
+                    @endif
                 </div>
-                <div class="form-group">
-                    <label for="description">Description</label>
-                    <textarea type="text" class="form-control" id="description" name="description" rows="12" placeholder="Describe the event here...">{{ $event_date->event->description }}</textarea>
+                <div class="form-group{{ $errors->has('description') ? ' has-error' : '' }}">
+                    {{ Form::label('description') }}
+                    {{ Form::textarea('description', $event_date->event->description, ['placeholder' => 'Describe the event here...', 'class' => 'form-control', 'rows' => 12]) }}
+                    @if ($errors->has('description'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('description') }}</strong>
+                        </span>
+                    @endif
                 </div>
             </div>
             <div class="col-xs-12 col-md-4">
                 <div class="event-img">
                     <img src="{{ $event_date->event->image_url }}" alt="{{ $event_date->event->title }}" class="img-thumbnail">
                 </div>
-                <div class="form-group">
-                    <label for="location">New Image Url</label>
+                <div class="form-group{{ $errors->has('image_url') ? ' has-error' : '' }}">
+                    {{ Form::label('image_url', 'New Event Image Url') }}
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-picture"></span></div>
-                        <input type="text" class="form-control" id="image_url" name="image_url" placeholder="New image url" value="{{ $event_date->event->image_url}}">
+                        {{ Form::text('image_url', $event_date->event->image_url, ['placeholder' => 'Paste here the new event\'s image url', 'class' => 'form-control']) }}
                     </div>
+                    @if ($errors->has('image_url'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('image_url') }}</strong>
+                        </span>
+                    @endif
                 </div>
                 <div class="form-group">
-                    <label for="is_highlighted">Highlighted?
-                        <br />
-                        @if($event_date->event->is_highlighted)
-                            <input type="checkbox" id="is_highlighted" name="is_highlighted" value="1" checked="checked">
-                        @else
-                            <input type="checkbox" id="is_highlighted" name="is_highlighted" value="1">
-                        @endif
-                        Yes, it's a highlighted event
-                    </label>
+                    {{ Form::label('is_highlighted', 'Highlighted?') }}<br />
+                    {{ Form::checkbox('is_highlighted', '1', $event_date->event->is_highlighted) }} Yes, it's a highlighted event
                 </div>
-                <div class="form-group">
-                    <label for="location">Location</label>
+                <div class="form-group{{ $errors->has('location') ? ' has-error' : '' }}">
+                    {{ Form::label('location', 'Location') }}
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-map-marker"></span></div>
-                        <input type="text" class="form-control" id="location" name="location" placeholder="Location of the event" value="{{ $event_date->location}}">
+                        {{ Form::text('location', $event_date->location, ['placeholder' => 'Location of the event', 'class' => 'form-control']) }}
                     </div>
+                    @if ($errors->has('location'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('location') }}</strong>
+                        </span>
+                    @endif
                 </div>
                 <div class="form-group">
-                    <label for="date">Event Date</label>
+                    {{ Form::label('date', 'Event Date') }}
                     <div class="input-group">
                         <div class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></div>
-                        <input type="text" class="form-control" id="date" name="date" placeholder="Click to change date" value="{{ $event_date->getDate() }} @ {{ $event_date->getTime() }}">
+                        {{ Form::text('date', $event_date->getDate() . ' @ ' . $event_date->getTime(), ['placeholder' => 'Click to change date', 'class' => 'form-control']) }}
                     </div>
                 </div>
-                <div class="form-group">
-                    <label for="date">Price</label>
+                <div class="form-group{{ $errors->has('date') ? ' has-error' : '' }}">
+                    {{ Form::label('price', 'Price') }}
                     <div class="input-group">
                         <div class="input-group-addon"><i class="fa fa-usd" aria-hidden="true"></i></div>
-                        <input type="text" class="form-control" id="price" name="price" placeholder="Set the event's price" value="{{ $event_date->price }}">
+                        {{ Form::text('price', $event_date->price, ['placeholder' => 'Set the event\'s price', 'class' => 'form-control']) }}
                     </div>
+                    @if ($errors->has('date'))
+                        <span class="help-block">
+                            <strong>{{ $errors->first('date') }}</strong>
+                        </span>
+                    @endif
                 </div>
                 <h3>Event's Dates</h3>
                 <ul>
@@ -81,5 +102,5 @@
                 </button>
             </div>
         @endif
-    </form>
+    {!! Form::close() !!}
 @endsection
