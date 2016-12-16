@@ -89,3 +89,8 @@ Working Demo:
 http://ec2-54-191-170-68.us-west-2.compute.amazonaws.com/
 ```
 And see the app working
+
+## Important Notes
+ * I moved the `location` and `price` attribute from `events` table to `event_dates` table because the same event could be in different places with different prices (place restriction)
+ * I used english in the whole project because we can translate this easily in the future
+ * The customization of `event_dates` add new dates is not implemented (it was not a required behavior) 
